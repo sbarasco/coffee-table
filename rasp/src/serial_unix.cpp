@@ -1,4 +1,4 @@
-#include "serial.h"
+#include "serial_unix.h"
 #include <iostream>
 #include <termios.h>
 #include <sys/select.h>
@@ -7,17 +7,19 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <poll.h>
 
-serial::serial(std::string device): m_fd(0), m_device(device)
+serial_unix::serial_unix(std::string device): m_fd(0), m_device(device)
 {
 }
 
-serial::~serial()
+serial_unix::~serial_unix()
 {
     close();
 }
 
-bool serial::open(int baud)
+bool serial_unix::open(int baud)
 {
     struct termios tinfo;
     struct serial_struct kernel_serial_settings;
@@ -33,6 +35,7 @@ bool serial::open(int baud)
         std::cerr << "unable to get serial parms" << std::endl;
         return false;
     }
+    cfmakeraw(&tinfo);
     if (cfsetspeed(&tinfo, baud) < 0)
     {
         std::cerr << "error in cfsetspeed\n" << std::endl;
@@ -55,49 +58,33 @@ bool serial::open(int baud)
     return true;
 }
 
-ssize_t serial::write(const char *data, int len)
+ssize_t serial_unix::write(const char *data, int len)
 {
     if(m_fd != 0)
+    {
+        struct pollfd fds[1];
+        fds[0].fd = m_fd;
+        fds[0].events = POLLOUT;
+        fds[0].revents = 0;
+        poll(fds, 1, -1);
         return ::write(m_fd, data, len);
+    }
 }
 
-ssize_t serial::read(char *buf, int len)
+ssize_t serial_unix::read(char *buf, int len)
 {
-//    int count=0;
-// int r;
-// int retry=0;
-// //char buf[512];
-
-// if (len > sizeof(buf) || len < 1) return -1;
-// // non-blocking read mode
-// fcntl(port, F_SETFL, fcntl(port, F_GETFL) | O_NONBLOCK);
-// while (count < len) {
-//     r = read(port, buf + count, len - count);
-//     //printf("read, r = %d\n", r);
-//     if (r < 0 && errno != EAGAIN && errno != EINTR) return -1;
-//     else if (r > 0) count += r;
-//     else {
-//         // no data available right now, must wait
-//         fd_set fds;
-//         struct timeval t;
-//         FD_ZERO(&fds);
-//         FD_SET(port, &fds);
-//         t.tv_sec = 1;
-//         t.tv_usec = 0;
-//         r = select(port+1, &fds, NULL, NULL, &t);
-//         //printf("select, r = %d\n", r);
-//         if (r < 0) return -1;
-//         if (r == 0) return count; // timeout
-//     }
-//     retry++;
-//     if (retry > 1000) return -100; // no input
-// }
-// fcntl(port, F_SETFL, fcntl(port, F_GETFL) & ~O_NONBLOCK);
-// return count;
-    return 1;
+    if(m_fd != 0)
+    {
+        struct pollfd fds[1];
+        fds[0].fd = m_fd;
+        fds[0].events = POLLIN;
+        fds[0].revents = 0;
+        poll(fds, 1, -1);
+        return ::read(m_fd, buf, len);
+    }
 }
 
-bool serial::close()
+bool serial_unix::close()
 {
     if(m_fd != 0)
     {

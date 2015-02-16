@@ -10,15 +10,12 @@ extern "C"
 class serial
 {
 public:
-    serial(std::string device);
-    ~serial();
-    bool open(int baud);
-    ssize_t write(const char *data, int len);
-    ssize_t read(char *buf, int len);
-    bool close();
-private:
-    int m_fd;
-    std::string m_device;
+    serial() {}
+    ~serial() {}
+    virtual bool open(int baud) = 0;
+    virtual ssize_t write(const char *data, int len) = 0;
+    virtual ssize_t read(char *buf, int len) = 0;
+    virtual bool close() = 0;
 };
 
 #endif

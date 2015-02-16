@@ -55,15 +55,11 @@ void plasma::start()
 
     for (uint8_t x = 0; x < LEDPERLINE; x++)
     {
-        // int left2Right, pixelIndex;
-        // if (((y % (ROWS_LEDs/8)) & 1) == 0) {
-        //   left2Right = 1;
-        //   pixelIndex = y * COLS_LEDs;
-        // } else {
-        //   left2Right = -1;
-        //   pixelIndex = (y + 1) * COLS_LEDs - 1;
+        // for (uint8_t y = 0; y < NBLINES; y++)
+        // {
+        //     m_leds->setPixel(x, y, 0xFFFFFF);
         // }
-        for (uint8_t y = 8; y < 20; y++)
+        for (uint8_t y = 0; y < NBLINES; y++)
         {
             //Calculate 3 seperate plasma waves, one for each color channel
             uint8_t r = fastCosineCalc(((x << 3) + (t >> 1) + fastCosineCalc((t2 + (y << 3)))));
@@ -77,8 +73,7 @@ void plasma::start()
             uint32_t color = ((r << 16) | (g << 8) | b);
             //std::cout << std::dec << "(" << (uint16_t)x << "," << (uint16_t)y << ")" << "=" << std::hex << std::setw(6) << std::setfill('0') << color << "  ";
             m_leds->setPixel(x, y, color);
-            //m_leds->setPixel(x, y+9, color);
-            // m_leds->setPixel(x, y, 0xFF0000);
+            //m_leds->setPixel(x, y+NBLINES/2, color);
         }
         // for (uint8_t y = NBLINES/2; y < NBLINES; y++)
         // {
@@ -86,7 +81,6 @@ void plasma::start()
         // }
         //std::cout << std::endl;
     }
-
     m_leds->update();
     usleep(10000);
   }
