@@ -14,6 +14,7 @@ AC_CANONICAL_HOST
 AC_PROG_CXX
 
 # Checks for libraries.
+CXXFLAGS+=" -std=c++11"
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/ioctl.h sys/time.h termios.h unistd.h])

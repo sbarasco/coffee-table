@@ -6,16 +6,18 @@ extern "C"
 {
 #include <unistd.h>
 }
+#include "socket.hpp"
 
-class serial
+class serial: public socket
 {
 public:
-    serial() {}
-    ~serial() {}
-    virtual bool open(int baud) = 0;
-    virtual ssize_t write(const char *data, int len) = 0;
-    virtual ssize_t read(char *buf, int len) = 0;
-    virtual bool close() = 0;
+    serial(std::string device);
+    ~serial();
+    virtual bool open();
+    void setbaud(int baud);
+private:
+    std::string m_device;
+    int m_baud;
 };
 
 #endif

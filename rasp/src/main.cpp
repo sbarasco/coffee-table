@@ -16,43 +16,79 @@
 #include "rainbow.h"
 #include "plasma.h"
 #include "pong.h"
-#include "serial_unix.h"
+#include "serial.h"
+#include "socket.hpp"
+#include "tcpsock.hpp"
 
 #define BAUD 115200
 
 int main(int argc, char **argv)
 {
-    serial_unix serial("/dev/ttyACM0");
-    serial.open(BAUD);
-    usleep(100000);
-    ledMatrix leds(&serial);
+    std::string device("/dev/ttyACM0");
+    char *socket_opt = NULL;
+    int c;
+    int use_tcp = 0;
+    int index;
+    socket *comm;
+    while ((c = getopt (argc, argv, "t")) != -1)
+    {
+        switch (c)
+        {
+        case 't':
+            use_tcp = 1;
+            break;
+        case '?':
+        {
+            if (isprint (optopt))
+            {
+                fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+            }
+            else
+            {
+                fprintf (stderr,
+                         "Unknown option character `\\x%x'.\n",
+                         optopt);
+            }
+            return 1;
+        }
+        default:
+            abort ();
+        }
+    }
+    for (index = optind; index < argc; index++)
+    {
+        socket_opt = argv[index];
+    }
+    if(use_tcp)
+    {
+        /* open tcp socket */
+        if(!socket_opt)
+        {
+            return 1;
+        }
+        device = std::string(socket_opt);
+        tcpsock tcpcomm(device);
+        comm = &tcpcomm;
+    }
+    else
+    {
+        if(socket_opt)
+        {
+            device = std::string(socket_opt);
+        }
+        serial serial(device);
+        serial.setbaud(BAUD);
+        comm = &serial;
+    }
+    std::cout << "open device " << device << std::endl;
+    if(!comm->open())
+    {
+        return 1;
+    }
+    ledMatrix leds(comm);
     // rainbow rb(&leds, VERTICAL);
     // rb.start();
     plasma pl(&leds);
     pl.start();
-    // pong pg(&leds);
-    // pg.start();
-    // for(int i = 0; i < LEDPERLINE; i++)
-    // {
-    //     for(int j = 0; j < NBLINES; j++)
-    //     {
-    //         leds.setPixel(i, j, 0xFF0000);
-    //     }
-    // }
-    // for(int i = 4; i < 8; i++)
-    // {
-    //     for(int j = 0; j < NBLINES; j++)
-    //     {
-    //         leds.setPixel(i, j, 0x00FF00);
-    //     }
-    // }
-    // for(int i = 8; i < 12; i++)
-    // {
-    //     for(int j = 0; j < NBLINES; j++)
-    //     {
-    //         leds.setPixel(i, j, 0x0000FF);
-    //     }
-    // }
-    leds.update();
     return 0;
 }

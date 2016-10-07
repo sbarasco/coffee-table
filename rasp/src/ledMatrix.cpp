@@ -2,7 +2,7 @@
 #include <string.h>
 #include <iostream>
 
-ledMatrix::ledMatrix(serial* serial): m_serial(serial)
+ledMatrix::ledMatrix(socket* socket): m_socket(socket)
 {
     clean();
 }
@@ -52,8 +52,8 @@ void ledMatrix::setPixel(uint32_t x, uint32_t y, int32_t color)
 
 void ledMatrix::update()
 {
-    m_serial->write("*", 1);
-    if(m_serial->write((char*)drawingMemory, sizeof(drawingMemory)) != sizeof(drawingMemory))
+    m_socket->write("*", 1);
+    if(m_socket->write((char*)drawingMemory, sizeof(drawingMemory)) != sizeof(drawingMemory))
     {
         std::cout << "update incomplete" << std::endl;
     }
