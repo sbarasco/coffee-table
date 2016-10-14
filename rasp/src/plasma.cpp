@@ -2,8 +2,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include <unistd.h>
-
 uint8_t const cos_wave[256] =
 {0,0,0,0,1,1,1,2,2,3,4,5,6,6,8,9,10,11,12,14,15,17,18,20,22,23,25,27,29,31,33,35,38,40,42,
 45,47,49,52,54,57,60,62,65,68,71,73,76,79,82,85,88,91,94,97,100,103,106,109,113,116,119,
@@ -57,15 +55,11 @@ void plasma::start()
 
     for (uint8_t x = 0; x < LEDPERLINE; x++)
     {
-        // int left2Right, pixelIndex;
-        // if (((y % (ROWS_LEDs/8)) & 1) == 0) {
-        //   left2Right = 1;
-        //   pixelIndex = y * COLS_LEDs;
-        // } else {
-        //   left2Right = -1;
-        //   pixelIndex = (y + 1) * COLS_LEDs - 1;
+        // for (uint8_t y = 0; y < NBLINES; y++)
+        // {
+        //     m_leds->setPixel(x, y, 0xFFFFFF);
         // }
-        for (uint8_t y = 0; y < NBLINES/2+3; y++)
+        for (uint8_t y = 0; y < NBLINES; y++)
         {
             //Calculate 3 seperate plasma waves, one for each color channel
             uint8_t r = fastCosineCalc(((x << 3) + (t >> 1) + fastCosineCalc((t2 + (y << 3)))));
@@ -79,8 +73,7 @@ void plasma::start()
             uint32_t color = ((r << 16) | (g << 8) | b);
             //std::cout << std::dec << "(" << (uint16_t)x << "," << (uint16_t)y << ")" << "=" << std::hex << std::setw(6) << std::setfill('0') << color << "  ";
             m_leds->setPixel(x, y, color);
-            //m_leds->setPixel(x, y+9, color);
-            // m_leds->setPixel(x, y, 0xFF0000);
+            //m_leds->setPixel(x, y+NBLINES/2, color);
         }
         // for (uint8_t y = NBLINES/2; y < NBLINES; y++)
         // {
@@ -88,8 +81,7 @@ void plasma::start()
         // }
         //std::cout << std::endl;
     }
-
     m_leds->update();
-    usleep(5000);
+    usleep(10000);
   }
 }
