@@ -3,7 +3,7 @@
 
 #include <sys/cdefs.h>
 #include <stdint.h>
-#include "socket.hpp"
+#include "virtsocket.hpp"
 
 #define LEDPERLINE 12
 #define COLPERSTRIP 4
@@ -14,14 +14,14 @@
 class ledMatrix
 {
 public:
-    ledMatrix(socket* socket);
+    ledMatrix(virtsocket* virtsocket);
     ~ledMatrix();
     void setPixel(uint32_t num, int32_t color);
     void setPixel(uint32_t x, uint32_t y, int32_t color);
     void update();
     void clean();
 private:
-    socket* m_socket;
+    virtsocket* m_socket;
     int32_t drawingMemory[LEDPERSTRIP*6];
 };
 

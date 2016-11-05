@@ -9,9 +9,10 @@ class plasma: public animation
 {
 public:
     plasma(ledMatrix* leds);
-    void start();
+    void step();
 private:
     ledMatrix* m_leds;
+    unsigned long m_frameCount;
 };
 
 #endif

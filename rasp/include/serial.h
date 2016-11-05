@@ -6,9 +6,9 @@ extern "C"
 {
 #include <unistd.h>
 }
-#include "socket.hpp"
+#include "virtsocket.hpp"
 
-class serial: public socket
+class serial: public virtsocket
 {
 public:
     serial(std::string device);

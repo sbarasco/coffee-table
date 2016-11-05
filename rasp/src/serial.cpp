@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-serial::serial(std::string device): socket(), m_device(device), m_baud(115200)
+serial::serial(std::string device): virtsocket(), m_device(device), m_baud(115200)
 {
 }
 

@@ -11,7 +11,7 @@
 #define AUDIO_DEVICE "alsa_output.pci-0000_08_04.0.analog-stereo.monitor"
 
 #define FFT_N 1024
-#define M_PI 3.14159265
+//#define M_PI 3.14159265
 
 static const pa_sample_spec ss = {
     // .format = PA_SAMPLE_S16LE,

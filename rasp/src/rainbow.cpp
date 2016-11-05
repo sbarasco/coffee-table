@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 
-rainbow::rainbow(ledMatrix* leds, int sens): m_leds(leds), m_sens(sens)
+rainbow::rainbow(ledMatrix* leds, int sens): m_leds(leds), m_sens(sens), m_color(0)
 {
     int saturation = 100;
     int lightness = 50;
@@ -13,35 +13,27 @@ rainbow::rainbow(ledMatrix* leds, int sens): m_leds(leds), m_sens(sens)
     }
 }
 
-void rainbow::start()
+void rainbow::step()
 {
-    while(1)
+    int x, y, index;
+    for (x=0; x < LEDPERLINE; x++)
     {
-        int color, x, y, index;
-        while(1)
+        if(m_sens == VERTICAL)
         {
-            for (color=0; color < 180; color++)
+            index = (m_color + x*10) % 180;
+        }
+        for (y=0; y < NBLINES; y++)
+        {
+            if(m_sens == HORIZONTAL)
             {
-                for (x=0; x < LEDPERLINE; x++)
-                {
-                    if(m_sens == VERTICAL)
-                    {
-                        index = (color + x*10) % 180;
-                    }
-                    for (y=0; y < NBLINES; y++)
-                    {
-                        if(m_sens == HORIZONTAL)
-                        {
-                            index = (color + y*5) % 180;
-                        }
-                        m_leds->setPixel(x, y, rainbowColors[index]);
-                    }
-                }
-                m_leds->update();
-                usleep(60000);
+                index = (m_color + y*5) % 180;
             }
+            m_leds->setPixel(x, y, rainbowColors[index]);
         }
     }
+    m_leds->update();
+    usleep(60000);
+    m_color = (m_color+1) % 180;
 }
 
 int rainbow::makeColor(unsigned int hue, unsigned int saturation, unsigned int lightness)

@@ -12,15 +12,30 @@
 #include <string.h>
 #include <iostream>
 
+#include "serial.h"
+#include "virtsocket.hpp"
+#include "tcpsock.hpp"
 #include "ledMatrix.h"
 #include "rainbow.h"
 #include "plasma.h"
 #include "pong.h"
-#include "serial.h"
-#include "socket.hpp"
-#include "tcpsock.hpp"
+#include "border.h"
+
+#include <evhttp.h>
+
+// #include <event2/event.h>
+// #include <event2/event_struct.h>
+// #include <event2/util.h>
 
 #define BAUD 115200
+
+struct timeval lasttime;
+static void
+refresh_cb(evutil_socket_t fd, short event, void *arg)
+{
+    animation** anim = (animation**)arg;
+    (*anim)->step();
+}
 
 int main(int argc, char **argv)
 {
@@ -29,7 +44,11 @@ int main(int argc, char **argv)
     int c;
     int use_tcp = 0;
     int index;
-    socket *comm;
+    virtsocket *comm;
+    struct event timeout;
+    struct timeval tv;
+    struct event_base *base;
+
     while ((c = getopt (argc, argv, "t")) != -1)
     {
         switch (c)
@@ -86,9 +105,26 @@ int main(int argc, char **argv)
         return 1;
     }
     ledMatrix leds(comm);
+    animation* anim;
+    // anim = new plasma(&leds);
+    anim = new rainbow(&leds, VERTICAL);
     // rainbow rb(&leds, VERTICAL);
     // rb.start();
-    plasma pl(&leds);
-    pl.start();
+    // plasma pl(&leds);
+    // pl.start();
+    // pong pg(&leds);
+    // pg.start();
+    // border br(&leds);
+    // br.start();
+    base = event_base_new();
+    event_assign(&timeout, base, -1, EV_PERSIST, refresh_cb, (void*) &anim);
+    evutil_timerclear(&tv);
+    tv.tv_sec = 0;
+    /* 60 FPS */
+    tv.tv_usec = 1000000/60;
+    event_add(&timeout, &tv);
+    evutil_gettimeofday(&lasttime, NULL);
+    event_base_dispatch(base);
+
     return 0;
 }

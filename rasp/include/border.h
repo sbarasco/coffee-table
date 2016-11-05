@@ -9,7 +9,7 @@ class border: public animation
 {
 public:
     border(ledMatrix* leds);
-    void start();
+    void step();
 private:
     ledMatrix* m_leds;
 };

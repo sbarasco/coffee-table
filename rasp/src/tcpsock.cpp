@@ -12,7 +12,7 @@
 #include <arpa/inet.h>
 #include <regex>
 
-tcpsock::tcpsock(std::string address): socket(), m_addr(address)
+tcpsock::tcpsock(std::string address): virtsocket(), m_addr(address)
 {
 }
 

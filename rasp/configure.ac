@@ -26,6 +26,18 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
+#check fftw3 for audio mode
+PKG_CHECK_MODULES([FFTW3], fftw3, [], AC_MSG_ERROR([libfftw3 not found]))
+AC_SUBST(FFTW3_LIBS)
+AC_SUBST(FFTW3_CFLAGS)
+PKG_CHECK_MODULES([PULSE], libpulse-simple, [], AC_MSG_ERROR([libpulse-simple not found]))
+AC_SUBST(PULSE_LIBS)
+AC_SUBST(PULSE_CFLAGS)
+PKG_CHECK_MODULES([EVENT], libevent, [], AC_MSG_ERROR([libevent not found]))
+AC_SUBST(EVENT_LIBS)
+AC_SUBST(EVENT_CFLAGS)
+
+
 # Checks for library functions.
 AC_CHECK_FUNCS([memset select])
 

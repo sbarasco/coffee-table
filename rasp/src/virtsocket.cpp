@@ -1,4 +1,4 @@
-#include "socket.h"
+#include "virtsocket.hpp"
 #include <iostream>
 #include <termios.h>
 #include <sys/select.h>
@@ -7,22 +7,24 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
-socket::socket(): m_fd(0)
+
+virtsocket::virtsocket(): m_fd(0)
 {
 }
 
-socket::~socket()
+virtsocket::~virtsocket()
 {
 }
 
-ssize_t socket::write(const char *data, int len)
+ssize_t virtsocket::write(const char *data, int len)
 {
     if(m_fd != 0)
         return ::write(m_fd, data, len);
 }
 
-bool socket::close()
+bool virtsocket::close()
 {
     if(m_fd != 0)
     {

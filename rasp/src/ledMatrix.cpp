@@ -2,7 +2,7 @@
 #include <string.h>
 #include <iostream>
 
-ledMatrix::ledMatrix(socket* socket): m_socket(socket)
+ledMatrix::ledMatrix(virtsocket* virtsocket): m_socket(virtsocket)
 {
     clean();
 }
@@ -23,7 +23,9 @@ void ledMatrix::setPixel(uint32_t num, int32_t color)
     uint8_t bit, *p;
     color = ((color<<16)&0xFF0000) | ((color>>8)&0x00FFFF);
 
+    /* get the strip number which contains the pixel */
     strip = num / stripLen;
+    /* get pixel offset in the strip */
     offset = num % stripLen;
     bit = (1<<strip);
     p = ((uint8_t *)drawingMemory) + offset * 24;

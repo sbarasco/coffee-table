@@ -1,13 +1,13 @@
-#ifndef __SOCKET_H__
-#define __SOCKET_H__
+#ifndef __VIRTSOCKET_H__
+#define __VIRTSOCKET_H__
 
 #include <string>
 
-class socket
+class virtsocket
 {
 public:
-    socket();
-    ~socket();
+    virtsocket();
+    ~virtsocket();
     virtual bool open() = 0;
     ssize_t write(const char *data, int len);
     bool close();

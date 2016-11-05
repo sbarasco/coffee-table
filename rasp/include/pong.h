@@ -9,7 +9,7 @@ class pong: public animation
 {
 public:
     pong(ledMatrix* leds);
-    void start();
+    void step();
 private:
     ledMatrix* m_leds;
 };

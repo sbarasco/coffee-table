@@ -2,9 +2,9 @@
 #define __TCPSOCK_H__
 
 #include <string>
-#include "socket.hpp"
+#include "virtsocket.hpp"
 
-class tcpsock: public socket
+class tcpsock: public virtsocket
 {
 public:
     tcpsock(std::string address);

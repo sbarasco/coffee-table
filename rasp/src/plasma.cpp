@@ -1,6 +1,7 @@
 #include "plasma.h"
 #include <iostream>
 #include <iomanip>
+#include <unistd.h>
 
 uint8_t const cos_wave[256] =
 {0,0,0,0,1,1,1,2,2,3,4,5,6,6,8,9,10,11,12,14,15,17,18,20,22,23,25,27,29,31,33,35,38,40,42,
@@ -40,48 +41,28 @@ inline uint8_t fastCosineCalc( uint16_t preWrapVal)
   return (pgm_read_byte_near(cos_wave+wrapVal)); 
 }
 
-plasma::plasma(ledMatrix* leds): m_leds(leds)
+plasma::plasma(ledMatrix* leds): m_leds(leds), m_frameCount(0)
 {
 }
 
-void plasma::start()
+void plasma::step()
 {
-      unsigned long frameCount=0;  // arbitrary seed to calculate the three time displacement variables t,t2,t3
-  while(1) {
-    frameCount+=1 ; 
-    uint16_t t = fastCosineCalc((42 * frameCount)/100);  //time displacement - fiddle with these til it looks good...
-    uint16_t t2 = fastCosineCalc((35 * frameCount)/100); 
-    uint16_t t3 = fastCosineCalc((38 * frameCount)/100);
+    m_frameCount+=1 ;
+    uint16_t t = fastCosineCalc((42 * m_frameCount)/100);  //time displacement - fiddle with these til it looks good...
+    uint16_t t2 = fastCosineCalc((35 * m_frameCount)/100); 
+    uint16_t t3 = fastCosineCalc((38 * m_frameCount)/100);
 
     for (uint8_t x = 0; x < LEDPERLINE; x++)
     {
-        // for (uint8_t y = 0; y < NBLINES; y++)
-        // {
-        //     m_leds->setPixel(x, y, 0xFFFFFF);
-        // }
         for (uint8_t y = 0; y < NBLINES; y++)
         {
             //Calculate 3 seperate plasma waves, one for each color channel
             uint8_t r = fastCosineCalc(((x << 3) + (t >> 1) + fastCosineCalc((t2 + (y << 3)))));
             uint8_t g = fastCosineCalc(((y << 3) + t + fastCosineCalc(((t3 >> 2) + (x << 3)))));
             uint8_t b = fastCosineCalc(((y << 3) + t2 + fastCosineCalc((t + x + (g >> 2)))));
-            // //uncomment the following to enable gamma correction
-            // //g=pgm_read_byte_near(exp_gamma+g);
-            // //b=pgm_read_byte_near(exp_gamma+b);
-            // m_leds->setPixel(y, x, ((r << 16) | (g << 8) | b));
-            // pixelIndex += left2Right;
             uint32_t color = ((r << 16) | (g << 8) | b);
-            //std::cout << std::dec << "(" << (uint16_t)x << "," << (uint16_t)y << ")" << "=" << std::hex << std::setw(6) << std::setfill('0') << color << "  ";
             m_leds->setPixel(x, y, color);
-            //m_leds->setPixel(x, y+NBLINES/2, color);
         }
-        // for (uint8_t y = NBLINES/2; y < NBLINES; y++)
-        // {
-        //     m_leds->setPixel(x, y, 0x000000 | y*5);
-        // }
-        //std::cout << std::endl;
     }
     m_leds->update();
-    usleep(10000);
-  }
 }
