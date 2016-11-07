@@ -45,3 +45,42 @@ $(function() {
         }
     }
 });
+
+
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+$(document).ready(function(){
+    $('form').submit(function(event) {
+        event.preventDefault();
+        //var json = JSON.stringify($('form').serializeArray());
+        var json = JSON.stringify($('form').serializeObject());
+        $.ajax({
+            type : "POST", // type of action POST || GET
+            dataType : 'json', // data type
+            data : json,
+            success : function(result) {
+                // you can see the result from the console
+                // tab of the developer tools
+                console.log(result);
+            },
+            error: function(xhr, resp, text) {
+                console.log(xhr, resp, text);
+            }
+        })
+    });
+});

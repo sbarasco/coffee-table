@@ -66,3 +66,33 @@ void plasma::step()
     }
     m_leds->update();
 }
+
+
+std::string plasma::get_page_name()
+{
+    return std::string("/plasma.html");
+}
+
+void plasma::get_page(std::stringstream& page_stream)
+{
+    page_stream.write((char*)header_page_html, header_page_html_len);
+    page_stream << "        <div id=\"page-wrapper\">" << std::endl
+                << "        <div class=\"row\">" << std::endl
+                << "          <div class=\"col-lg-12\">" << std::endl
+                << "            <h1 class=\"page-header\">Plasma</h1>" << std::endl
+                << "          </div>" << std::endl
+                << "        </div>" << std::endl
+                << "        <div class=\"row\">" << std::endl
+                << "          <div class=\"col-lg-12\">" << std::endl
+                << "            <form id=\"form\" role=\"form\">" << std::endl
+                << "              <button id=\"submit\" type=\"submit\" class=\"btn btn-default\">Envoyer</button>" << std::endl
+                << "            </form>" << std::endl
+                << "          </div>" << std::endl
+                << "        </div>" << std::endl
+                << "      </div>" << std::endl;
+    page_stream.write((char*)footer_page_html, footer_page_html_len);
+}
+
+void plasma::set_parameters(char *params)
+{
+}

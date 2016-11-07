@@ -1,6 +1,6 @@
 BUILT_SOURCES = index_html.h bootstrap_min_css.h metisMenu_min_css.h sb-admin-2_css.h \
 	bootstrap_min_js.h metisMenu_min_js.h sb-admin-2_js.h menu_html.h jquery_min_js.h \
-	header_page_html.h footer_page_html.h json_formdata_min_js.h
+	header_page_html.h footer_page_html.h
 
 index_html : index.html
 	cp $< $@
@@ -72,12 +72,6 @@ footer_page_html : footer_page.html
 	cp $< $@
 
 footer_page_html.h : footer_page_html
-	xxd -i $< $@
-
-json_formdata_min_js : json-formdata.min.js
-	cp $< $@
-
-json_formdata_min_js.h : json_formdata_min_js
 	xxd -i $< $@
 
 clean-local:

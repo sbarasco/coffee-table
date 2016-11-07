@@ -10,6 +10,9 @@ class plasma: public animation
 public:
     plasma(ledMatrix* leds);
     void step();
+    std::string get_page_name();
+    void get_page(std::stringstream& page_stream);
+    void set_parameters(char *params);
 private:
     ledMatrix* m_leds;
     unsigned long m_frameCount;

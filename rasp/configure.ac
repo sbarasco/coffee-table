@@ -41,6 +41,6 @@ AC_SUBST(EVENT_CFLAGS)
 # Checks for library functions.
 AC_CHECK_FUNCS([memset select])
 
-AC_CONFIG_FILES(src/Makefile Makefile)
+AC_CONFIG_FILES(src/Makefile http/Makefile Makefile)
 
 AC_OUTPUT
