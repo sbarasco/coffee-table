@@ -270,6 +270,7 @@ int main(int argc, char **argv)
     }
     evhttp_set_gencb(http, generic_cb, (void*) &current_anim);
 
+    evhttp_set_cb(http, "/rainbow.html", animation_request_cb, current_anim);
     evhttp_set_cb(http, "/pong.html", animation_request_cb, new pong(&leds));
     evhttp_set_cb(http, "/plasma.html", animation_request_cb, new plasma(&leds));
     evhttp_set_cb(http, "/border.html", animation_request_cb, new border(&leds));
