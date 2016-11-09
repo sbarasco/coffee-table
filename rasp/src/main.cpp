@@ -184,13 +184,16 @@ int main(int argc, char **argv)
     struct event_base *base;
     struct evhttp *http;
     struct evhttp_bound_socket *handle;
-    int port = 8080;
-    while ((c = getopt (argc, argv, "t")) != -1)
+    int port = 80;
+    while ((c = getopt (argc, argv, "tw:")) != -1)
     {
         switch (c)
         {
         case 't':
             use_tcp = 1;
+            break;
+        case 'w':
+            port = std::stoi(std::string(optarg));
             break;
         case '?':
         {
