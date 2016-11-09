@@ -33,6 +33,7 @@ bool serial::open()
         std::cerr << "unable to get serial parms" << std::endl;
         return false;
     }
+    cfmakeraw(&tinfo);
     if (cfsetspeed(&tinfo, m_baud) < 0)
     {
         std::cerr << "error in cfsetspeed\n" << std::endl;
