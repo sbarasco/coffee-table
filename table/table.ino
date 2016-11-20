@@ -25,10 +25,11 @@ void setup() {
   delay(200);
   setColor(WHITE);
   leds.show();
+  delay(1000);
+  setColor(BLACK);
   Serial.begin(115200);
   Serial.setTimeout(50);
 }
-
 
 void loop()
 {
