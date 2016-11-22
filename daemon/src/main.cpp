@@ -21,7 +21,7 @@
 #include "rainbow.h"
 #include "plasma.h"
 #include "pong.h"
-#include "border.h"
+#include "plain.h"
 
 #include <evhttp.h>
 #include "http/index_html.h"
@@ -276,7 +276,7 @@ int main(int argc, char **argv)
     evhttp_set_cb(http, "/rainbow.html", animation_request_cb, current_anim);
     evhttp_set_cb(http, "/pong.html", animation_request_cb, new pong(&leds));
     evhttp_set_cb(http, "/plasma.html", animation_request_cb, new plasma(&leds));
-    evhttp_set_cb(http, "/border.html", animation_request_cb, new border(&leds));
+    evhttp_set_cb(http, "/plain.html", animation_request_cb, new plain(&leds));
     /* Now we tell the evhttp what port to listen on */
     handle = evhttp_bind_socket_with_handle(http, "0.0.0.0", port);
     if (!handle)
